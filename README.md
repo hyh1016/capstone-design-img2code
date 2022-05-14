@@ -1,0 +1,2 @@
+# CAPSTONE-DESIGN-IMG2CODE
+2022년 CAPSLOCK 팀의 종합설계 리포지토리입니다.
