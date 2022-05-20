@@ -5,7 +5,7 @@ from keras.layers import Input, Dense, Dropout, \
                          RepeatVector, LSTM, concatenate, \
                          Conv2D, MaxPooling2D, Flatten
 from keras.models import Sequential, Model
-from keras.optimizers import RMSprop
+from keras.optimizer_v2.rmsprop import RMSprop
 from keras import *
 from .Config import *
 from .AModel import *
