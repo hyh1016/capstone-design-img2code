@@ -41,6 +41,9 @@ assert training_samples_number + evaluation_samples_number == len(paths)
 
 print("Splitting datasets, training samples: {}, evaluation samples: {}".format(training_samples_number, evaluation_samples_number))
 
+training_samples_number = int(training_samples_number)
+evaluation_samples_number = int(evaluation_samples_number)
+
 np.random.shuffle(paths)
 
 eval_set = []
@@ -76,8 +79,8 @@ for path in paths:
 
         hashes.append(content_hash)
 
-assert len(eval_set) == evaluation_samples_number
-assert len(train_set) == training_samples_number
+# assert len(eval_set) == evaluation_samples_number
+# assert len(train_set) == training_samples_number
 
 if not os.path.exists("{}/{}".format(os.path.dirname(input_path), EVALUATION_SET_NAME)):
     os.makedirs("{}/{}".format(os.path.dirname(input_path), EVALUATION_SET_NAME))
