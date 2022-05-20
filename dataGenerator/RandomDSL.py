@@ -17,7 +17,7 @@ class Node:
     def randomNode(self, depth):
         pass
     def __str__(self):
-        out = self.name+' {'
+        out = '\n'+self.name+' {'
         iscomma = False
         for n in self.nodes:
             if isinstance(n, LeafNode):
@@ -29,7 +29,7 @@ class Node:
                 iscomma = True
             else:
                 iscomma = False
-                out+='\n'+n.__str__()
+                out+=n.__str__()
         return out+'\n}'
 
 class BtnInactive(LeafNode):
@@ -74,7 +74,7 @@ class Row(Node):
         self.name = 'row'
     def randomNode(self, depth):
         self.nodes = []
-        cnt = random.randrange(1, 10)
+        cnt = random.randrange(1, 3)
         for _ in range(cnt):
             # if random.randrange(1, 3)==1 or depth>2:
             #     self.nodes.append(leaf[random.randrange(0, len(leaf))])
@@ -115,8 +115,7 @@ class Dsl():
         h = Header()
         h.randomNode(0)
         out = h.__str__()
-        print(leaf)
-        for _ in range(random.randrange(0, 10)):
+        for _ in range(random.randrange(0, 5)):
             r = Row()
             r.randomNode(0)
             out += r.__str__()
