@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 from __future__ import print_function
 from __future__ import absolute_import
+from datetime import datetime
+from gc import callbacks
+from tensorflow import keras
+
 __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import tensorflow as tf
 sess = tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(log_device_placement=True))
 
 import sys
@@ -12,6 +15,18 @@ import sys
 from classes.dataset.Generator import *
 from classes.model.pix2code import *
 
+import os
+dir_name = "Learning_log"
+
+def make_tensorboard_dir(dir_name):
+    root_logdir = os.path.join(os.curdir,dir_name)
+    sub_dir_name = datetime.now().strftime("%Y%m%d-%H%M%S")
+    return os.path.join(root_logdir,sub_dir_name)
+
+TB_log_dir = make_tensorboard_dir(dir_name)
+TensorB = keras.callbacks.TensorBoard(log_dir = TB_log_dir)
+
+# early_stop = keras.callbacks.EarlyStopping(monitor = "var_loss",min_delta=0, patience=10, restore_best_weights=True)
 
 def run(input_path, output_path, is_memory_intensive=False, pretrained_model=None):
     np.random.seed(1234)
@@ -47,9 +62,9 @@ def run(input_path, output_path, is_memory_intensive=False, pretrained_model=Non
         model.model.load_weights(pretrained_model)
 
     if not is_memory_intensive:
-        model.fit(dataset.input_images, dataset.partial_sequences, dataset.next_words)
+        model.fit(dataset.input_images, dataset.partial_sequences, dataset.next_words, callbacks=[TensorB])
     else:
-        model.fit_generator(generator, steps_per_epoch=steps_per_epoch)
+        model.fit_generator(generator, steps_per_epoch=steps_per_epoch, callbacks=[TensorB])
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
