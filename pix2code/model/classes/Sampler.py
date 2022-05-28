@@ -58,6 +58,46 @@ class Sampler:
 
         return predictions, out_probas
 
+    # 테스트용
+    def predict_greedy_(self, model, input_img, output_path, file_name, require_sparse_label=True, sequence_length=150, verbose=False):
+        current_context = [self.voc.vocabulary[PLACEHOLDER]] * (self.context_length - 1)
+        current_context.append(self.voc.vocabulary[START_TOKEN])
+        if require_sparse_label:
+            current_context = Utils.sparsify(current_context, self.output_size)
+
+        predictions = START_TOKEN
+        out_probas = []
+
+        for i in range(0, sequence_length):
+            if verbose:
+                print("predicting {}/{}...".format(i, sequence_length))
+
+            probas = model.predict(input_img, np.array([current_context]))
+            prediction = np.argmax(probas)
+            out_probas.append(probas)
+
+            new_context = []
+            for j in range(1, self.context_length):
+                new_context.append(current_context[j])
+
+            if require_sparse_label:
+                sparse_label = np.zeros(self.output_size)
+                sparse_label[prediction] = 1
+                new_context.append(sparse_label)
+            else:
+                new_context.append(prediction)
+
+            current_context = new_context
+
+            predictions += self.voc.token_lookup[prediction]
+            with open("{}/{}_{}.gui".format(output_path, file_name, i), 'w') as out_f:
+                out_f.write(predictions+'\n')
+                out_f.write(np.array2string(probas))
+            if self.voc.token_lookup[prediction] == END_TOKEN:
+                break
+
+        return predictions, out_probas
+
     def recursive_beam_search(self, model, input_img, current_context, beam, current_node, sequence_length):
         probas = model.predict(input_img, np.array([current_context]))
 

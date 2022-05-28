@@ -9,6 +9,17 @@ from os.path import basename
 from classes.Sampler import *
 from classes.model.pix2code import *
 
+def vis_model():
+    model.model.summary()
+    from keras.utils.vis_utils import plot_model
+    plot_model(model.model, to_file='model.png', show_shapes=True)
+    plot_model(model.model.get_layer('sequential'), to_file='sequential.png', show_shapes=True)
+    plot_model(model.model.get_layer('sequential_1'), to_file='sequential1.png', show_shapes=True)
+
+
+
+
+
 argv = sys.argv[1:]
 
 if len(argv) < 4:
@@ -29,13 +40,15 @@ output_size = meta_dataset[1]
 model = pix2code(input_shape, output_size, trained_weights_path)
 model.load(trained_model_name)
 
+vis_model()
+
 sampler = Sampler(trained_weights_path, input_shape, output_size, CONTEXT_LENGTH)
 
 file_name = basename(input_path)[:basename(input_path).find(".")]
 evaluation_img = Utils.get_preprocessed_img(input_path, IMAGE_SIZE)
 
 if search_method == "greedy":
-    result, _ = sampler.predict_greedy(model, np.array([evaluation_img]))
+    result, _ = sampler.predict_greedy_(model, np.array([evaluation_img]), output_path, file_name)
     print("Result greedy: {}".format(result))
 else:
     beam_width = int(search_method)
