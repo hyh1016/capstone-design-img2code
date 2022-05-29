@@ -18,8 +18,14 @@ if __name__ == "__main__":
         print("web-compiler.py <path> <file name>")
         exit(0)
 
-FILL_WITH_RANDOM_TEXT = True
+FILL_WITH_RANDOM_TEXT = False # True: Set Random String / False: Set Example String
 TEXT_PLACE_HOLDER = "[]"
+
+EXAMPLE_STRING = {
+    'btn': 'Button',
+    'title': "Title",
+    'text': "This is Example text."
+}
 
 dsl_path = "assets/web-dsl-mapping.json"
 compiler = Compiler(dsl_path)
@@ -34,6 +40,11 @@ def render_content_with_text(key, value):
         elif key.find("text") != -1:
             value = value.replace(TEXT_PLACE_HOLDER,
                                   Utils.get_random_text(length_text=56, space_number=7, with_upper_case=False))
+    else:
+        candidate = ["btn", "title", "text"]
+        for e in candidate:
+            if key.find(e) != -1:
+                value = value.replace(TEXT_PLACE_HOLDER, EXAMPLE_STRING.get(e))
     return value
 
 file_uid = basename(input_file)[:basename(input_file).find(".")]
