@@ -34,10 +34,10 @@ for f in os.listdir(input_path):
             path_img = "{}/{}.png".format(input_path, file_name)
             paths.append(file_name)
 
-evaluation_samples_number = len(paths) / (distribution + 1)
-training_samples_number = evaluation_samples_number * distribution
+evaluation_samples_number = (int)(len(paths) / (distribution + 1))
+training_samples_number =(int) (evaluation_samples_number * distribution)
 
-assert training_samples_number + evaluation_samples_number == len(paths)
+# assert training_samples_number + evaluation_samples_number == len(paths)
 
 print("Splitting datasets, training samples: {}, evaluation samples: {}".format(training_samples_number, evaluation_samples_number))
 
@@ -76,8 +76,8 @@ for path in paths:
 
         hashes.append(content_hash)
 
-assert len(eval_set) == evaluation_samples_number
-assert len(train_set) == training_samples_number
+# assert len(eval_set) == evaluation_samples_number
+# assert len(train_set) == training_samples_number
 
 if not os.path.exists("{}/{}".format(os.path.dirname(input_path), EVALUATION_SET_NAME)):
     os.makedirs("{}/{}".format(os.path.dirname(input_path), EVALUATION_SET_NAME))
