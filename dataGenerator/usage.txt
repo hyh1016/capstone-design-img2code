@@ -1,0 +1,1 @@
+python .\dataGenerator\main.py

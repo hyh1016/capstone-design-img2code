@@ -14,10 +14,15 @@ class HtmlToPng:
     # path: 절대경로 입력
     def get_screen(self, path: string, file_name) -> None:
         self.driver.get('file:///{}/{}.html'.format(path, file_name))
+        self.driver.implicitly_wait(10)
+
+        #초기 너비 지정
+        self.driver.set_window_size(1920, 50)
 
         width = self.driver.execute_script("return document.body.scrollWidth") #스크롤 할 수 있는 최대 넓이
         height = self.driver.execute_script("return document.body.scrollHeight") #스크롤 할 수 있는 최대 높이
-        self.driver.set_window_size(width, height) #스크롤 할 수 있는 모든 부분을 지정
+        #스크롤 할 수 있는 모든 부분을 지정
+        self.driver.set_window_size(width, height)
         
         self.driver.save_screenshot('dataGenerator/data/png/{}.png'.format(file_name))
 
@@ -28,7 +33,7 @@ class HtmlToPng:
         options.add_argument('--ignore-certificate-errors')
         options.add_argument('--ignore-ssl-errors')
         options.add_argument('headless')
-        options.add_argument('window-size=1920x1080')
+        options.add_argument('window-size=1920x50')
 
         self.driver = webdriver.Chrome('dataGenerator/chromedriver.exe', options=options)
         self.driver.delete_all_cookies()

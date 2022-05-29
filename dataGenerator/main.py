@@ -7,7 +7,9 @@ import os
 
 path = 'dataGenerator/data/'
 def make_dir():
-    os.makedirs(['./dataGenerator/data/dsl', './dataGenerator/data/html', './dataGenerator/data/png'], exist_ok=True)
+    os.makedirs('./dataGenerator/data/dsl', exist_ok=True)
+    os.makedirs('./dataGenerator/data/html', exist_ok=True)
+    os.makedirs('./dataGenerator/data/png', exist_ok=True)
 
 def make_data(iter: int):
     rd = Dsl()
