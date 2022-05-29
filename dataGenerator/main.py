@@ -4,6 +4,8 @@ import RandomDSL
 from RandomDSL import *
 from posixpath import abspath
 import os
+import uuid
+import argparse
 
 path = 'dataGenerator/data/'
 def make_dir():
@@ -15,15 +17,20 @@ def make_data(iter: int):
     rd = Dsl()
     g = HtmlToPng()
     for num in range(iter):
-        with open(path+'dsl/'+str(num)+'.gui', 'w') as f:
+        fileName = str(uuid.uuid4()).upper()
+        with open(path+'dsl/'+fileName+'.gui', 'w') as f:
             f.write(rd.getDsl()[1:])
         
         mh = MakeHtml()
-        mh.saveHtml(path, str(num))
+        mh.saveHtml(path, fileName)
 
-        g.get_screen(abspath('dataGenerator/data/html'), str(num))
+        g.get_screen(abspath('dataGenerator/data/html'), fileName)
 
 
 if __name__=='__main__':
+    parser = argparse.ArgumentParser(description='make data')
+    parser.add_argument('cnt', type=int)
+    args = parser.parse_args()
+    
     make_dir()
-    make_data(100)
+    make_data(args.cnt)
