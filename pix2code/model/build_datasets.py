@@ -41,6 +41,9 @@ training_samples_number =(int) (evaluation_samples_number * distribution)
 
 print("Splitting datasets, training samples: {}, evaluation samples: {}".format(training_samples_number, evaluation_samples_number))
 
+training_samples_number = int(training_samples_number)
+evaluation_samples_number = int(evaluation_samples_number)
+
 np.random.shuffle(paths)
 
 eval_set = []
