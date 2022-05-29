@@ -61,12 +61,12 @@ class pix2code(AModel):
         optimizer = RMSprop(lr=0.0001, clipvalue=1.0)
         self.model.compile(loss='categorical_crossentropy', optimizer=optimizer)
 
-    def fit(self, images, partial_captions, next_words):
-        self.model.fit([images, partial_captions], next_words, shuffle=False, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=1)
+    def fit(self, images, partial_captions, next_words, callbacks):
+        self.model.fit([images, partial_captions], next_words, shuffle=False, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=1, callbacks=callbacks)
         self.save()
 
-    def fit_generator(self, generator, steps_per_epoch):
-        self.model.fit_generator(generator, steps_per_epoch=steps_per_epoch, epochs=EPOCHS, verbose=1)
+    def fit_generator(self, generator, steps_per_epoch, callbacks):
+        self.model.fit_generator(generator, steps_per_epoch=steps_per_epoch, epochs=EPOCHS, verbose=1,callbacks=callbacks)
         self.save()
 
     def predict(self, image, partial_caption):

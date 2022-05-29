@@ -159,5 +159,6 @@ datasets/*
 
 # Training output
 bin/
-
+binHistory/
 code/
+model/Learning_log/
