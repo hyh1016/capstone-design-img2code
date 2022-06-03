@@ -1,0 +1,2 @@
+인자로 생성할 갯수
+python .\dataGenerator\main.py 100
