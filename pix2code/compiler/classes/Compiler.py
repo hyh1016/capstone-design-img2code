@@ -6,9 +6,10 @@ from classes.Node import *
 
 
 class Compiler:
-    def __init__(self, dsl_mapping_file_path):
-        with open(dsl_mapping_file_path) as data_file:
-            self.dsl_mapping = json.load(data_file)
+    def __init__(self, dsl_mapping):
+        # with open(dsl_mapping_file_path) as data_file:
+            # self.dsl_mapping = json.load(data_file)
+        self.dsl_mapping = dsl_mapping
 
         self.opening_tag = self.dsl_mapping["opening-tag"]
         self.closing_tag = self.dsl_mapping["closing-tag"]

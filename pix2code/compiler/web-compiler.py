@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from __future__ import print_function
+
 __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
 import sys
@@ -7,6 +8,7 @@ import sys
 from os.path import basename
 from classes.Utils import *
 from classes.Compiler import *
+from classes.DSLMapper import *
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
@@ -27,8 +29,13 @@ EXAMPLE_STRING = {
     'text': "This is Example text."
 }
 
-dsl_path = "assets/web-dsl-mapping.json"
-compiler = Compiler(dsl_path)
+# dsl_path = "assets/web-dsl-mapping.json" # Bootstrap CSS json mapping information
+# dsl_path = "assets/tailwind-dsl-mapping.json" # Tailwind CSS json mapping information
+
+dsl_mapper = DSLMapper("assets/class-group.json")
+dsl_mapping = dsl_mapper.get_dsl_mapping()
+
+compiler = Compiler(dsl_mapping)
 
 
 def render_content_with_text(key, value):
