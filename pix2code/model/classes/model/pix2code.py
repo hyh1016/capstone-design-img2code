@@ -1,4 +1,6 @@
 from __future__ import absolute_import
+
+from sklearn import metrics
 __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
 from keras.layers import Input, Dense, Dropout, \
@@ -59,14 +61,14 @@ class pix2code(AModel):
         self.model = Model(inputs=[visual_input, textual_input], outputs=decoder)
 
         optimizer = RMSprop(lr=0.0001, clipvalue=1.0)
-        self.model.compile(loss='categorical_crossentropy', optimizer=optimizer)
+        self.model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
     def fit(self, images, partial_captions, next_words, callbacks):
         self.model.fit([images, partial_captions], next_words, shuffle=False, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=1, callbacks=callbacks)
         self.save()
 
-    def fit_generator(self, generator, steps_per_epoch, callbacks):
-        self.model.fit_generator(generator, steps_per_epoch=steps_per_epoch, epochs=EPOCHS, verbose=1,callbacks=callbacks)
+    def fit_generator(self, generator, test_img, test_caption, test_next_word, steps_per_epoch, callbacks):
+        self.model.fit_generator(generator, steps_per_epoch=steps_per_epoch, epochs=EPOCHS, verbose=1, callbacks=callbacks, validation_data=([test_img, test_caption],test_next_word))
         self.save()
 
     def predict(self, image, partial_caption):
