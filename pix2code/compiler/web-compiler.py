@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from __future__ import print_function
+
 __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
 import sys
@@ -7,6 +8,7 @@ import sys
 from os.path import basename
 from classes.Utils import *
 from classes.Compiler import *
+from classes.DSLMapper import *
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
@@ -18,11 +20,22 @@ if __name__ == "__main__":
         print("web-compiler.py <path> <file name>")
         exit(0)
 
-FILL_WITH_RANDOM_TEXT = True
+FILL_WITH_RANDOM_TEXT = False # True: Set Random String / False: Set Example String
 TEXT_PLACE_HOLDER = "[]"
 
-dsl_path = "assets/web-dsl-mapping.json"
-compiler = Compiler(dsl_path)
+EXAMPLE_STRING = {
+    'btn': 'Button',
+    'title': "Title",
+    'text': "This is Example text."
+}
+
+# dsl_path = "assets/web-dsl-mapping.json" # Bootstrap CSS json mapping information
+# dsl_path = "assets/tailwind-dsl-mapping.json" # Tailwind CSS json mapping information
+
+dsl_mapper = DSLMapper("assets/class-group.json")
+dsl_mapping = dsl_mapper.get_dsl_mapping()
+
+compiler = Compiler(dsl_mapping)
 
 
 def render_content_with_text(key, value):
@@ -34,6 +47,11 @@ def render_content_with_text(key, value):
         elif key.find("text") != -1:
             value = value.replace(TEXT_PLACE_HOLDER,
                                   Utils.get_random_text(length_text=56, space_number=7, with_upper_case=False))
+    else:
+        candidate = ["btn", "title", "text"]
+        for e in candidate:
+            if key.find(e) != -1:
+                value = value.replace(TEXT_PLACE_HOLDER, EXAMPLE_STRING.get(e))
     return value
 
 file_uid = basename(input_file)[:basename(input_file).find(".")]
