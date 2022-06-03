@@ -1,0 +1,14 @@
+{
+    "header": "header clearfix",
+    "nav": "nav nav-pills flex justify-start",
+    "btn": "py-1 px-3 rounded font-bold",
+    "btn-active": "bg-blue-500 hover:bg-blue-700 text-white",
+    "btn-inactive": "bg-blue-500 text-white opacity-50 cursor-not-allowed",
+    "btn-green": "bg-green-500 hover:bg-green-700 text-white",
+    "btn-orange": "bg-orange-500 hover:bg-orange-700 text-white",
+    "btn-red": "bg-red-500 hover:bg-red-700 text-white",
+    "row": "row flex",
+    "single": "col-lg-12 grow",
+    "double": "col-lg-6 grow",
+    "quadruple": "col-lg-3 grow"
+}
