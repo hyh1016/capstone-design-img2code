@@ -26,6 +26,16 @@ class Utils:
         return img
 
     @staticmethod
+    def get_preprocessed_img_bytes(bytes, image_size):
+        import cv2
+        encoded_img = np.fromstring(bytes, dtype = np.uint8)
+        img = cv2.imdecode(encoded_img, cv2.IMREAD_COLOR)
+        img = cv2.resize(img, (image_size, image_size))
+        img = img.astype('float32')
+        img /= 255
+        return img
+
+    @staticmethod
     def show(image):
         import cv2
         cv2.namedWindow("view", cv2.WINDOW_AUTOSIZE)
