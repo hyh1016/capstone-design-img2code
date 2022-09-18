@@ -1,0 +1,26 @@
+@font-face {
+    font-family: 'NanumBarunGothic';
+    font-style: normal;
+    font-weight: 400;
+    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot');
+    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.ttf') format('truetype');
+}
+
+* {
+    font-family: 'NanumBarunGothic', 'Times New Roman', Times, serif;
+}
+
+body {
+    background-color: indigo;
+}
+
+#container {
+    margin: 0 auto;
+    width: 600px;
+}
+
+header {
+    font-size: xx-large;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
