@@ -21,11 +21,31 @@ const uploadEvent = (e) => {
     reader.readAsDataURL(file);
 
     // pix2code API 서버에 요청해서 html 획득
+    // sending to 34.69.172.233/predict with file post data
+    const formData = new FormData();
+    formData.append('image', file);
 
-    // 받아온 html을 File로 생성 (File명 == Image명)
+    fetch('http://34.69.172.233/predict', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(res => {
+        console.log(res);
+        // file.name 확장자 제거
+        const filename = file.name.split('.')[0];
 
-    // 다운로드 이벤트
+        // html 파일 생성
+        const blob = new Blob([res.html], {type: 'text/html'});
+        const url = URL.createObjectURL(blob);
 
+        // 다운로드 이벤트
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${filename}.html`;
+        a.click();
+    })
+    .catch(err => console.log(err));
 }
 
 const createImage = (src, filename) => {
