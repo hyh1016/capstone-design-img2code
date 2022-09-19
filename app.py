@@ -40,4 +40,7 @@ def predict():
     # dsl 변환
     html = compiler.compile(input_str=result, rendering_function=render_content_with_text)
     print("Result compile: {}".format(html))
-    return jsonify({'html':html})
+    # 리스폰스 객체 생성
+    response = jsonify({'html':html})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
