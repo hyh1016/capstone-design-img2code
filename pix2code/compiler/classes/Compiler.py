@@ -2,7 +2,7 @@
 __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
 import json
-from classes.Node import *
+from .Node import *
 
 
 class Compiler:
@@ -17,13 +17,19 @@ class Compiler:
 
         self.root = Node("body", None, self.content_holder)
 
-    def compile(self, input_file_path, output_file_path, rendering_function=None):
-        dsl_file = open(input_file_path)
+    def compile(self, input_file_path='', output_file_path='', input_str='', rendering_function=None):
+        if input_file_path!='':
+            dsl_file = open(input_file_path)
+        else:
+            dsl_file = input_str.split('\n')
+
         current_parent = self.root
 
         for token in dsl_file:
             token = token.replace(" ", "").replace("\n", "")
-
+            if token=='':
+                continue
+            
             if token.find(self.opening_tag) != -1:
                 token = token.replace(self.opening_tag, "")
 
@@ -39,5 +45,8 @@ class Compiler:
                     current_parent.add_child(element)
 
         output_html = self.root.render(self.dsl_mapping, rendering_function=rendering_function)
-        with open(output_file_path, 'w') as output_file:
-            output_file.write(output_html)
+        if output_file_path!='':
+            with open(output_file_path, 'w') as output_file:
+                output_file.write(output_html)
+        else:
+            return output_html
