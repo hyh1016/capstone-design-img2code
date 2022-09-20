@@ -6,6 +6,8 @@ from posixpath import abspath
 import os
 import uuid
 import argparse
+from tqdm import tqdm
+import multiprocessing as mult
 
 path = 'dataGenerator/data/'
 def make_dir():
@@ -16,7 +18,7 @@ def make_dir():
 def make_data(iter: int):
     rd = Dsl()
     g = HtmlToPng()
-    for num in range(iter):
+    for num in tqdm(range(iter)):
         fileName = str(uuid.uuid4()).upper()
         with open(path+'dsl/'+fileName+'.gui', 'w') as f:
             f.write(rd.getDsl()[1:])
@@ -32,5 +34,12 @@ if __name__=='__main__':
     parser.add_argument('cnt', type=int)
     args = parser.parse_args()
     
+    procs = []
     make_dir()
-    make_data(args.cnt)
+    for i in range(25):
+        p = mult.Process(target=make_data, args=(args.cnt,))
+        p.start()
+        procs.append(p)
+    
+    for p in procs:
+        p.join()
