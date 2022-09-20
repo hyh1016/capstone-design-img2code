@@ -13,31 +13,46 @@ from .Config import *
 from .AModel import *
 
 
-class pix2code(AModel):
+class pix2codeVGG(AModel):
     def __init__(self, input_shape, output_size, output_path):
         AModel.__init__(self, input_shape, output_size, output_path)
-        self.name = "pix2code"
+        self.name = "pix2codeVGG"
 
         image_model = Sequential()
-        image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu', input_shape=input_shape))
-        image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu'))
+        image_model.add(Conv2D(64, (3, 3), padding='same', activation='relu', input_shape=input_shape, kernel_initializer='he_normal'))
+        image_model.add(Conv2D(64, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
         image_model.add(MaxPooling2D(pool_size=(2, 2)))
         image_model.add(Dropout(0.25))
 
-        image_model.add(Conv2D(64, (3, 3), padding='valid', activation='relu'))
-        image_model.add(Conv2D(64, (3, 3), padding='valid', activation='relu'))
+        image_model.add(Conv2D(128, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Conv2D(128, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
         image_model.add(MaxPooling2D(pool_size=(2, 2)))
         image_model.add(Dropout(0.25))
 
-        image_model.add(Conv2D(128, (3, 3), padding='valid', activation='relu'))
-        image_model.add(Conv2D(128, (3, 3), padding='valid', activation='relu'))
+        image_model.add(Conv2D(256, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Conv2D(256, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Conv2D(256, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(MaxPooling2D(pool_size=(2, 2)))
+        image_model.add(Dropout(0.25))
+
+        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(MaxPooling2D(pool_size=(2, 2)))
+        image_model.add(Dropout(0.25))
+
+        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
         image_model.add(MaxPooling2D(pool_size=(2, 2)))
         image_model.add(Dropout(0.25))
 
         image_model.add(Flatten())
-        image_model.add(Dense(1024, activation='relu'))
+        image_model.add(Dense(4096, activation='relu', kernel_initializer='he_normal'))
         image_model.add(Dropout(0.3))
-        image_model.add(Dense(1024, activation='relu'))
+        image_model.add(Dense(4096, activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Dropout(0.3))
+        image_model.add(Dense(1024, activation='relu', kernel_initializer='he_normal'))
         image_model.add(Dropout(0.3))
 
         image_model.add(RepeatVector(CONTEXT_LENGTH))
