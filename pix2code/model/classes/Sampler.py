@@ -59,7 +59,7 @@ class Sampler:
         return predictions, out_probas
 
     # 테스트용
-    def predict_greedy_(self, model, input_img, output_path, file_name, require_sparse_label=True, sequence_length=150, verbose=False):
+    def predict_greedy_(self, model, input_img, output_path='', file_name='', require_sparse_label=True, sequence_length=150, verbose=False):
         current_context = [self.voc.vocabulary[PLACEHOLDER]] * (self.context_length - 1)
         current_context.append(self.voc.vocabulary[START_TOKEN])
         if require_sparse_label:
@@ -90,9 +90,10 @@ class Sampler:
             current_context = new_context
 
             predictions += self.voc.token_lookup[prediction]
-            with open("{}/{}_{}.gui".format(output_path, file_name, i), 'w') as out_f:
-                out_f.write(predictions+'\n')
-                out_f.write(np.array2string(probas))
+            if output_path!='':
+                with open("{}/{}_{}.gui".format(output_path, file_name, i), 'w') as out_f:
+                    out_f.write(predictions+'\n')
+                    out_f.write(np.array2string(probas))
             if self.voc.token_lookup[prediction] == END_TOKEN:
                 break
 
