@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+import tensorflow as tf
 
 from sklearn import metrics
 __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
@@ -8,6 +9,8 @@ from keras.layers import Input, Dense, Dropout, \
                          Conv2D, MaxPooling2D, Flatten
 from keras.models import Sequential, Model
 from keras.optimizer_v2.rmsprop import RMSprop
+from keras.optimizer_v2.adam import Adam
+from keras.optimizer_v2.nadam import Nadam
 from keras import *
 from .Config import *
 from .AModel import *
@@ -19,40 +22,40 @@ class pix2codeVGG(AModel):
         self.name = "pix2codeVGG"
 
         image_model = Sequential()
-        image_model.add(Conv2D(64, (3, 3), padding='same', activation='relu', input_shape=input_shape, kernel_initializer='he_normal'))
-        image_model.add(Conv2D(64, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Conv2D(64, (3, 3), padding='same', activation='relu', input_shape=input_shape))
+        image_model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
         image_model.add(MaxPooling2D(pool_size=(2, 2)))
         image_model.add(Dropout(0.25))
 
-        image_model.add(Conv2D(128, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
-        image_model.add(Conv2D(128, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Conv2D(128, (3, 3), padding='same', activation='relu'))
+        image_model.add(Conv2D(128, (3, 3), padding='same', activation='relu'))
         image_model.add(MaxPooling2D(pool_size=(2, 2)))
         image_model.add(Dropout(0.25))
 
-        image_model.add(Conv2D(256, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
-        image_model.add(Conv2D(256, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
-        image_model.add(Conv2D(256, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Conv2D(256, (3, 3), padding='same', activation='relu'))
+        image_model.add(Conv2D(256, (3, 3), padding='same', activation='relu'))
+        image_model.add(Conv2D(256, (3, 3), padding='same', activation='relu'))
         image_model.add(MaxPooling2D(pool_size=(2, 2)))
         image_model.add(Dropout(0.25))
 
-        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
-        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
-        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu'))
+        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu'))
+        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu'))
         image_model.add(MaxPooling2D(pool_size=(2, 2)))
         image_model.add(Dropout(0.25))
 
-        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
-        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
-        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu'))
+        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu'))
+        image_model.add(Conv2D(512, (3, 3), padding='same', activation='relu'))
         image_model.add(MaxPooling2D(pool_size=(2, 2)))
         image_model.add(Dropout(0.25))
 
         image_model.add(Flatten())
-        image_model.add(Dense(4096, activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Dense(4096, activation='relu'))
         image_model.add(Dropout(0.3))
-        image_model.add(Dense(4096, activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Dense(4096, activation='relu'))
         image_model.add(Dropout(0.3))
-        image_model.add(Dense(1024, activation='relu', kernel_initializer='he_normal'))
+        image_model.add(Dense(1024, activation='relu'))
         image_model.add(Dropout(0.3))
 
         image_model.add(RepeatVector(CONTEXT_LENGTH))
@@ -75,7 +78,10 @@ class pix2codeVGG(AModel):
 
         self.model = Model(inputs=[visual_input, textual_input], outputs=decoder)
 
-        optimizer = RMSprop(lr=0.0001, clipvalue=1.0)
+        #optimizer = RMSprop(lr=0.0001, clipvalue=1.0)
+        # optimizer = Adam(lr=0.0001, clipvalue=1.0)
+        #optimizer = Adam(lr=0.00005, clipvalue=1.0)
+        optimizer = Nadam(lr=0.0001, clipvalue=1.0)
         self.model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
     def fit(self, images, partial_captions, next_words, callbacks):
