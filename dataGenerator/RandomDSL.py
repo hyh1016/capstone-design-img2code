@@ -125,7 +125,7 @@ class Dsl():
         h = Header()
         h.randomNode(0)
         out = h.__str__()
-        for _ in range(random.randrange(0, 5)):
+        for _ in range(random.randrange(0, 3)):
             r = Row()
             r.randomNode(0)
             out += r.__str__()
