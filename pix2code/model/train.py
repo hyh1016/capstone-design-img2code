@@ -64,16 +64,16 @@ def run(input_path, output_path, test_path, is_memory_intensive=False, pretraine
         generator = Generator.data_generator(voc, gui_paths, img_paths, batch_size=BATCH_SIZE, generate_binary_sequences=True)
         vaild_generator = Generator.data_generator(voc, vaild_gui_paths, vailid_img_paths, batch_size=BATCH_SIZE, generate_binary_sequences=True)
 
-    #model = pix2code(input_shape, output_size, output_path)
-    model = pix2codeVGG(input_shape, output_size, output_path)
+    model = pix2code(input_shape, output_size, output_path)
+    #model = pix2codeVGG(input_shape, output_size, output_path)
     # plot_model(model.model, to_file="model.png")
-    # if pretrained_model is not None:
-    #     model.model.load_weights(pretrained_model)
+    if pretrained_model is not None:
+        model.model.load_weights(pretrained_model)
 
-    # if not is_memory_intensive:
-    #     model.fit(dataset.input_images, dataset.partial_sequences, dataset.next_words, callbacks=[TensorB])
-    # else:
-    #     model.fit_generator(generator, vaild_generator, steps_per_epoch=steps_per_epoch, validation_steps=valid_steps_per_epoch, callbacks=[TensorB])
+    if not is_memory_intensive:
+        model.fit(dataset.input_images, dataset.partial_sequences, dataset.next_words, callbacks=[TensorB])
+    else:
+        model.fit_generator(generator, vaild_generator, steps_per_epoch=steps_per_epoch, validation_steps=valid_steps_per_epoch, callbacks=[TensorB])
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
