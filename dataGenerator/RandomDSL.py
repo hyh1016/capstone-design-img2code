@@ -55,7 +55,8 @@ class Text(LeafNode):
     def __init__(self):
         self.name = 'text'
 
-leaf = [BtnActive(), BtnInactive(), BtnGreen(), BtnOrange(), BtnRed(), BigTitle(), SmallTitle(), Text()]
+leaf = [BtnGreen(), BtnOrange(), BtnRed(), BigTitle(), SmallTitle(), Text()]
+hleaf = [BtnActive(), BtnInactive()]
 
 nonleaf = []
 
@@ -66,7 +67,7 @@ class Header(Node):
         self.nodes = []
         cnt = random.randrange(1, 10)
         for _ in range(cnt):
-            self.nodes.append(leaf[random.randrange(0, len(leaf))])
+            self.nodes.append(hleaf[random.randrange(0, len(hleaf))])
 
 class Row(Node):
     def __init__(self):
@@ -95,7 +96,7 @@ class Single(Node):
         self.name = 'single'
     def randomNode(self, depth):
         self.nodes = []
-        cnt = random.randrange(2, 10)
+        cnt = random.randrange(1, 3)
         for _ in range(cnt):
             self.nodes.append(leaf[random.randrange(0, len(leaf))])
 
@@ -104,7 +105,7 @@ class Double(Node):
         self.name = 'double'
     def randomNode(self, depth):
         self.nodes = []
-        cnt = random.randrange(2, 10)
+        cnt = random.randrange(1, 3)
         for _ in range(cnt):
             self.nodes.append(leaf[random.randrange(0, len(leaf))])
             
@@ -113,7 +114,7 @@ class Quadruple(Node):
         self.name = 'quadruple'
     def randomNode(self, depth):
         self.nodes = []
-        cnt = random.randrange(2, 10)
+        cnt = random.randrange(1, 3)
         for _ in range(cnt):
             self.nodes.append(leaf[random.randrange(0, len(leaf))])
 
@@ -124,7 +125,7 @@ class Dsl():
         h = Header()
         h.randomNode(0)
         out = h.__str__()
-        for _ in range(random.randrange(0, 5)):
+        for _ in range(random.randrange(0, 3)):
             r = Row()
             r.randomNode(0)
             out += r.__str__()
