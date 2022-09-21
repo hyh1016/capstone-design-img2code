@@ -18,7 +18,7 @@ class HtmlToPng:
 
         #초기 너비 지정
         self.driver.set_window_size(2400, 1380)
-
+        self.driver.execute_script("document.body.style.zoom = '2'")
         # width = self.driver.execute_script("return document.body.scrollWidth") #스크롤 할 수 있는 최대 넓이
         # height = self.driver.execute_script("return document.body.scrollHeight") #스크롤 할 수 있는 최대 높이
         #스크롤 할 수 있는 모든 부분을 지정
