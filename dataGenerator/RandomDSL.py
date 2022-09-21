@@ -96,7 +96,7 @@ class Single(Node):
         self.name = 'single'
     def randomNode(self, depth):
         self.nodes = []
-        cnt = random.randrange(2, 10)
+        cnt = random.randrange(1, 3)
         for _ in range(cnt):
             self.nodes.append(leaf[random.randrange(0, len(leaf))])
 
@@ -105,7 +105,7 @@ class Double(Node):
         self.name = 'double'
     def randomNode(self, depth):
         self.nodes = []
-        cnt = random.randrange(2, 10)
+        cnt = random.randrange(1, 3)
         for _ in range(cnt):
             self.nodes.append(leaf[random.randrange(0, len(leaf))])
             
@@ -114,7 +114,7 @@ class Quadruple(Node):
         self.name = 'quadruple'
     def randomNode(self, depth):
         self.nodes = []
-        cnt = random.randrange(2, 10)
+        cnt = random.randrange(1, 3)
         for _ in range(cnt):
             self.nodes.append(leaf[random.randrange(0, len(leaf))])
 
