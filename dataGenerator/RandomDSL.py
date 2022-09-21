@@ -55,7 +55,8 @@ class Text(LeafNode):
     def __init__(self):
         self.name = 'text'
 
-leaf = [BtnActive(), BtnInactive(), BtnGreen(), BtnOrange(), BtnRed(), BigTitle(), SmallTitle(), Text()]
+leaf = [BtnGreen(), BtnOrange(), BtnRed(), BigTitle(), SmallTitle(), Text()]
+hleaf = [BtnActive(), BtnInactive()]
 
 nonleaf = []
 
@@ -66,7 +67,7 @@ class Header(Node):
         self.nodes = []
         cnt = random.randrange(1, 10)
         for _ in range(cnt):
-            self.nodes.append(leaf[random.randrange(0, len(leaf))])
+            self.nodes.append(hleaf[random.randrange(0, len(hleaf))])
 
 class Row(Node):
     def __init__(self):
