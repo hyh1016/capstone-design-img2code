@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 # 모델 경로 지정
 trained_weights_path='pix2code/bin'
-trained_model_name='pix2code'
+trained_model_name='pix2code_v1'
 
 # 모델 로드
 meta_dataset = np.load("{}/meta_dataset.npy".format(trained_weights_path), allow_pickle=True)

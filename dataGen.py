@@ -36,7 +36,7 @@ if __name__=='__main__':
     
     procs = []
     make_dir()
-    for i in range(30):
+    for i in range(25):
         p = mult.Process(target=make_data, args=(args.cnt,))
         p.start()
         procs.append(p)

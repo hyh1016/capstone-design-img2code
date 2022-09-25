@@ -65,7 +65,7 @@ class Header(Node):
         self.name = 'header'
     def randomNode(self, depth):
         self.nodes = []
-        cnt = random.randrange(1, 10)
+        cnt = random.randrange(1, 6)
         for _ in range(cnt):
             self.nodes.append(hleaf[random.randrange(0, len(hleaf))])
 
@@ -125,7 +125,7 @@ class Dsl():
         h = Header()
         h.randomNode(0)
         out = h.__str__()
-        for _ in range(random.randrange(0, 3)):
+        for _ in range(random.randrange(1, 4)):
             r = Row()
             r.randomNode(0)
             out += r.__str__()
