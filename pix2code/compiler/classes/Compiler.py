@@ -15,7 +15,7 @@ class Compiler:
         self.closing_tag = self.dsl_mapping["closing-tag"]
         self.content_holder = self.opening_tag + self.closing_tag
 
-        self.root = Node("body", None, self.content_holder)
+        # self.root = Node("body", None, self.content_holder)
 
     def compile(self, input_file_path='', output_file_path='', input_str='', rendering_function=None):
         if input_file_path!='':
@@ -23,6 +23,8 @@ class Compiler:
         else:
             dsl_file = input_str.split('\n')
 
+        self.root = Node("body", None, self.content_holder)
+        
         current_parent = self.root
 
         for token in dsl_file:
