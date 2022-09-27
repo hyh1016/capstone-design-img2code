@@ -6,7 +6,7 @@ import random
 from pix2code.compiler.classes.DSLMapper import DSLMapper
 from pix2code.compiler.classes.Compiler import *
 from pix2code.compiler.classes.Utils import *
-from pix2code.compiler.web_compiler import render_content_with_text
+from pix2code.compiler.web_compiler import render_content_with_example_text, render_content_with_random_text
 
 class MakeHtml:
 
@@ -20,7 +20,7 @@ class MakeHtml:
     def saveHtml(self, path: string, filename: string) -> None:
         dsl = '{}/dsl/{}.gui'.format(path, filename)
         html = '{}/html/{}.html'.format(path, filename)
-        self.compiler.compile(dsl, html, rendering_function=render_content_with_text)
+        self.compiler.compile(dsl, html, rendering_function=render_content_with_random_text)
 
 
 if __name__=='__main__':
