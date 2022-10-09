@@ -159,3 +159,6 @@ datasets/*
 
 # Training output
 bin/
+
+centerPosData.json
+chromeDriver.exe
