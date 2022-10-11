@@ -153,3 +153,39 @@ def colorTagPlot(path):
     plt.show()
 
     return colorData
+
+# 문자열 유사도 계산
+from difflib import SequenceMatcher
+
+# 파일 유사도 계산
+def fileSimilarity(path1, path2):
+    with open(path1, 'r') as f:
+        a = f.readlines()
+    with open(path2, 'r') as f:
+        b = f.readlines()
+
+    a_token_sequence = []
+    for line in a:
+        line = line.replace(",", " ,").replace("\n", " \n")
+        tokens = line.split(" ")
+        for token in tokens:
+            a_token_sequence.append(token)
+    
+    b_token_sequence = []
+    for line in b:
+        line = line.replace(",", " ,").replace("\n", " \n")
+        tokens = line.split(" ")
+        for token in tokens:
+            b_token_sequence.append(token)
+
+    # 배열 유사 리턴
+    return SequenceMatcher(None, a, b).ratio()
+
+# 폴더 한번에 유사도 계산
+def batchFileSimilarity(path):
+    guis = [f for f in os.listdir(path+'dsl/') if f.endswith('.gui')]
+    for i, name in enumerate(guis):
+        path1 = os.path.join(path+'dsl/', name)
+        path2 = os.path.join(path+'predicted/', name)
+        print(path1, path2, fileSimilarity(path1, path2))
+
