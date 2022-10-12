@@ -1,7 +1,7 @@
-from HtmlToPng import *
-from MakeHtml import MakeHtml
-import RandomDSL
-from RandomDSL import *
+from dataGenerator.HtmlToPng import *
+from dataGenerator.MakeHtml import MakeHtml
+import dataGenerator.RandomDSL
+from dataGenerator.RandomDSL import *
 from posixpath import abspath
 import os
 import uuid
@@ -36,7 +36,7 @@ if __name__=='__main__':
     
     procs = []
     make_dir()
-    for i in range(30):
+    for i in range(25):
         p = mult.Process(target=make_data, args=(args.cnt,))
         p.start()
         procs.append(p)

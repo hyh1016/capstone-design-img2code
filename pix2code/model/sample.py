@@ -8,13 +8,14 @@ import sys
 from os.path import basename
 from classes.Sampler import *
 from classes.model.pix2code import *
+from classes.model.pix2code_v1 import *
 
 def vis_model():
     model.model.summary()
-    from keras.utils.vis_utils import plot_model
-    plot_model(model.model, to_file='model.png', show_shapes=True)
-    plot_model(model.model.get_layer('sequential'), to_file='sequential.png', show_shapes=True)
-    plot_model(model.model.get_layer('sequential_1'), to_file='sequential1.png', show_shapes=True)
+    # from keras.utils.vis_utils import plot_model
+    # plot_model(model.model, to_file='model.png', show_shapes=True)
+    # plot_model(model.model.get_layer('sequential'), to_file='sequential.png', show_shapes=True)
+    # plot_model(model.model.get_layer('sequential_1'), to_file='sequential1.png', show_shapes=True)
 
 
 
@@ -37,7 +38,7 @@ meta_dataset = np.load("{}/meta_dataset.npy".format(trained_weights_path), allow
 input_shape = meta_dataset[0]
 output_size = meta_dataset[1]
 
-model = pix2code(input_shape, output_size, trained_weights_path)
+model = pix2code_v1(input_shape, output_size, trained_weights_path)
 model.load(trained_model_name)
 
 vis_model()
