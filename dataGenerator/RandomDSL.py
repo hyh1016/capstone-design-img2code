@@ -36,15 +36,21 @@ class BtnInactive(LeafNode):
 class BtnActive(LeafNode):
     def __init__(self):
         self.name = 'btn-active'
-class BtnGreen(LeafNode):
-    def __init__(self):
-        self.name = 'btn-green'
-class BtnOrange(LeafNode):
-    def __init__(self):
-        self.name = 'btn-orange'
 class BtnRed(LeafNode):
     def __init__(self):
         self.name = 'btn-red'
+class BtnOrange(LeafNode):
+    def __init__(self):
+        self.name = 'btn-orange'
+class BtnYellow(LeafNode):
+    def __init__(self):
+        self.name = 'btn-yellow'
+class BtnGreen(LeafNode):
+    def __init__(self):
+        self.name = 'btn-green'
+class BtnPurple(LeafNode):
+    def __init__(self):
+        self.name = 'btn-purple'
 class BigTitle(LeafNode):
     def __init__(self):
         self.name = 'big-title'
@@ -55,7 +61,7 @@ class Text(LeafNode):
     def __init__(self):
         self.name = 'text'
 
-leaf = [BtnGreen(), BtnOrange(), BtnRed(), BigTitle(), SmallTitle(), Text()]
+leaf = [BtnRed(),BtnOrange(), BtnYellow(), BtnGreen(), BtnPurple(), BigTitle(), SmallTitle(), Text()]
 hleaf = [BtnActive(), BtnInactive()]
 
 nonleaf = []
@@ -74,7 +80,7 @@ class Row(Node):
         self.name = 'row'
     def randomNode(self, depth):
         self.nodes = []
-        p = random.randrange(0, 3)
+        p = random.randrange(0, 4)
         for _ in range(nonleaf[p][1]):
             # if random.randrange(1, 3)==1 or depth>2:
             #     self.nodes.append(leaf[random.randrange(0, len(leaf))])
@@ -88,7 +94,9 @@ def factoryNonleaf(i: int):
         return Single()
     elif i==2:
         return Double()
-    else:
+    elif i==3:
+        return Triple()
+    elif i==4:
         return Quadruple()
 
 class Single(Node):
@@ -108,7 +116,16 @@ class Double(Node):
         cnt = random.randrange(1, 3)
         for _ in range(cnt):
             self.nodes.append(leaf[random.randrange(0, len(leaf))])
-            
+
+class Triple(Node):
+    def __init__(self):
+        self.name = 'triple'
+    def randomNode(self, depth):
+        self.nodes = []
+        cnt = random.randrange(1, 3)
+        for _ in range(cnt):
+            self.nodes.append(leaf[random.randrange(0, len(leaf))])
+
 class Quadruple(Node):
     def __init__(self):
         self.name = 'quadruple'
@@ -118,7 +135,7 @@ class Quadruple(Node):
         for _ in range(cnt):
             self.nodes.append(leaf[random.randrange(0, len(leaf))])
 
-nonleaf = [('single',1), ('double',2), ('quadruple',4)]
+nonleaf = [('single',1), ('double',2), ('triple',3), ('quadruple',4)]
 
 class Dsl():
     def getDsl(self):
