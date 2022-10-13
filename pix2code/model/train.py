@@ -17,7 +17,7 @@ import sys
 
 from classes.dataset.Generator import *
 from classes.model.pix2code import *
-from classes.model.pix2code_v1 import *
+from classes.model.pix2code_v1_Bi_GRU import *
 
 import os
 dir_name = "Learning_log"
@@ -66,10 +66,8 @@ def run(input_path, output_path, test_path, is_memory_intensive=False, pretraine
         generator = Generator.data_generator(voc, gui_paths, img_paths, batch_size=BATCH_SIZE, generate_binary_sequences=True)
         vaild_generator = Generator.data_generator(voc, vaild_gui_paths, vailid_img_paths, batch_size=BATCH_SIZE, generate_binary_sequences=True)
 
-    #model = pix2code(input_shape, output_size, output_path)
-    model = pix2code_v1(input_shape, output_size, output_path)
-    #model = pix2codeLSTM(input_shape, output_size, output_path)
-    #model = pix2codeVGG(input_shape, output_size, output_path)
+    model = pix2code(input_shape, output_size, output_path)
+    #model = pix2code_v1_Bi_GRU(input_shape, output_size, output_path)
     # plot_model(model.model, to_file="model.png")
     if pretrained_model is not None:
         model.model.load_weights(pretrained_model)
