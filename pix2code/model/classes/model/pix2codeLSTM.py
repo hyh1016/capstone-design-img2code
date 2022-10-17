@@ -14,10 +14,10 @@ from .Config import *
 from .AModel import *
 
 
-class pix2code_v1(AModel):
+class pix2codeLSTM(AModel):
     def __init__(self, input_shape, output_size, output_path):
         AModel.__init__(self, input_shape, output_size, output_path)
-        self.name = "pix2code_v1"
+        self.name = "pix2code"
 
         image_model = Sequential()
         image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu', input_shape=input_shape))
@@ -42,9 +42,9 @@ class pix2code_v1(AModel):
 
         image_model.add(Flatten())
         image_model.add(Dense(1024, activation='relu'))
-        image_model.add(Dropout(0.05))
+        image_model.add(Dropout(0.2))
         image_model.add(Dense(1024, activation='relu'))
-        image_model.add(Dropout(0.1))
+        image_model.add(Dropout(0.2))
 
         image_model.add(RepeatVector(CONTEXT_LENGTH))
 

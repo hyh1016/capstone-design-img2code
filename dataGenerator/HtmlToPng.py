@@ -35,7 +35,7 @@ class HtmlToPng:
         options.add_argument('headless')
         options.add_argument('window-size=1920x50')
 
-        self.driver = webdriver.Chrome('dataGenerator/chromedriver.exe', options=options)
+        self.driver = webdriver.Chrome('dataGenerator/chromedriver', options=options)
         self.driver.delete_all_cookies()
         self.driver.implicitly_wait(1)
         self.driver.set_page_load_timeout(10)
