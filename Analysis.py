@@ -250,12 +250,14 @@ def showAccuracy(fileAccuracy, tagAccuracy):
     # 태그별 정확도
     for tag in tagAccuracy:
         print(tag, 'accuracy :', tagAccuracy[tag][0]/tagAccuracy[tag][1])
+    plt.bar(tagAccuracy.keys(), [tagAccuracy[tag][0]/tagAccuracy[tag][1] for tag in tagAccuracy])
+    plt.show()
 
 
 if __name__ == '__main__':
     path = 'dataGenerator/data_/'
     plotCenterPos(path+'dsl/')
     plotTagSize(path+'dsl/')
-    showAccuracy(batchFileSimilarity(path))
+    showAccuracy(*batchFileSimilarity(path))
     
 
