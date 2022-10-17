@@ -244,11 +244,18 @@ def batchFileSimilarity(path):
             tagAccuracy[tag][1] += tagAccuracyPerFile[tag][1]
     return fileAccuracy, tagAccuracy
 
+def showAccuracy(fileAccuracy, tagAccuracy):
+    # 파일별 정확도
+    print('file accuracy :', sum(fileAccuracy)/len(fileAccuracy))
+    # 태그별 정확도
+    for tag in tagAccuracy:
+        print(tag, 'accuracy :', tagAccuracy[tag][0]/tagAccuracy[tag][1])
 
 
 if __name__ == '__main__':
-    fileAccuracy, tagAccuracy = batchFileSimilarity('dataGenerator/data_/')
-    print('평균 file accuracy :', sum(fileAccuracy)/len(fileAccuracy))
-    plt.bar(tagAccuracy.keys(), [tagAccuracy[tag][0]/tagAccuracy[tag][1] for tag in tagAccuracy])
-    plt.show()
+    path = 'dataGenerator/data_/'
+    plotCenterPos(path+'dsl/')
+    plotTagSize(path+'dsl/')
+    showAccuracy(batchFileSimilarity(path))
+    
 
