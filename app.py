@@ -6,7 +6,7 @@ from pix2code.model.classes.model.pix2code import *
 from pix2code.model.classes.Utils import *
 from pix2code.compiler.classes.Compiler import *
 from pix2code.compiler.classes.DSLMapper import *
-from pix2code.compiler.web_compiler import render_content_with_text
+from pix2code.compiler.web_compiler import render_content_with_example_text, render_content_with_random_text
 
 app = Flask(__name__)
 
@@ -38,7 +38,7 @@ def predict():
     result = result.replace(START_TOKEN, "").replace(END_TOKEN, "")
     print("Result greedy: {}".format(result))
     # dsl 변환
-    html = compiler.compile(input_str=result, rendering_function=render_content_with_text)
+    html = compiler.compile(input_str=result, rendering_function=render_content_with_example_text)
     print("Result compile: {}".format(html))
     # 리스폰스 객체 생성
     response = jsonify({'html':html})
