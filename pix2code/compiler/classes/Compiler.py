@@ -2,6 +2,7 @@
 __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
 import json
+import traceback
 from .Node import *
 
 
@@ -27,26 +28,33 @@ class Compiler:
         
         current_parent = self.root
 
-        for token in dsl_file:
-            token = token.replace(" ", "").replace("\n", "")
-            if token=='':
-                continue
-            
-            if token.find(self.opening_tag) != -1:
-                token = token.replace(self.opening_tag, "")
+        output_html = ""
+        try:
+            for token in dsl_file:
+                token = token.replace(" ", "").replace("\n", "")
+                if token=='':
+                    continue
+                
+                if token.find(self.opening_tag) != -1:
+                    token = token.replace(self.opening_tag, "")
 
-                element = Node(token, current_parent, self.content_holder)
-                current_parent.add_child(element)
-                current_parent = element
-            elif token.find(self.closing_tag) != -1:
-                current_parent = current_parent.parent
-            else:
-                tokens = token.split(",")
-                for t in tokens:
-                    element = Node(t, current_parent, self.content_holder)
+                    element = Node(token, current_parent, self.content_holder)
                     current_parent.add_child(element)
+                    current_parent = element
+                elif token.find(self.closing_tag) != -1:
+                    current_parent = current_parent.parent
+                else:
+                    tokens = token.split(",")
+                    for t in tokens:
+                        element = Node(t, current_parent, self.content_holder)
+                        current_parent.add_child(element)
 
-        output_html = self.root.render(self.dsl_mapping, rendering_function=rendering_function)
+            output_html = self.root.render(self.dsl_mapping, rendering_function=rendering_function)
+        except:
+            print('html을 생성하던 중 오류가 발생하였습니다.')
+            traceback.print_exc()
+            output_html = '<h1>Error Page</h1><h3>The image cannot be converted to html.</h3>'
+
         if output_file_path!='':
             with open(output_file_path, 'w') as output_file:
                 output_file.write(output_html)
