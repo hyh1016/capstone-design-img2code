@@ -5,7 +5,7 @@ __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 from .Vocabulary import *
 from .BeamSearch import *
 from .Utils import *
-
+from multiprocessing import Queue
 
 class Sampler:
     def __init__(self, voc_path, input_shape, output_size, context_length):

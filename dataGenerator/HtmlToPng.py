@@ -34,12 +34,13 @@ class HtmlToPng:
         options.add_argument('--ignore-ssl-errors')
         options.add_argument('headless')
         options.add_argument('window-size=1920x50')
-
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
         self.driver = webdriver.Chrome('dataGenerator/chromedriver', options=options)
         self.driver.delete_all_cookies()
         self.driver.implicitly_wait(1)
         self.driver.set_page_load_timeout(10)
         self.driver.set_script_timeout(10)
+        self.driver.set_window_size(2400, 1700)
 
     def make_code(self, cnt: int) -> None:
         for filename in range(cnt):

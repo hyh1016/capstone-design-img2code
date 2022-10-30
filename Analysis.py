@@ -8,11 +8,13 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 import time, os, tqdm
+from dataGenerator.MakeHtml import MakeHtml
 from pix2code.model.classes.dataset.Dataset import Dataset
 # analysis data using tensorboard
 import numpy as np
 import matplotlib.pyplot as plt
 import numpy as np
+from tqdm import tqdm
 
 # dataPath = "pix2code/datasets/pix2code_datasets/web/all_data"
 # dataPath = "dataGenerator/data/dsl/"
@@ -28,7 +30,7 @@ def plotTagData(dataPath):
     dataset = Dataset()
     dataset.load(dataPath, generate_binary_sequences=True)
     dic = dict()
-    for i, tok in enumerate(dataset.next_words):
+    for i, tok in tqdm(enumerate(dataset.next_words)):
         if dataset.ids[i] not in dic:
             dic[dataset.ids[i]] = tok.copy()
         else:
@@ -39,6 +41,7 @@ def plotTagData(dataPath):
     import matplotlib.pyplot as plt
     plt.barh(list(dataset.voc.token_lookup.values())[::-1], labelCountMean[::-1])
     plt.show()
+    plt.savefig('tagData.png', dpi=300)
 
 
 # 태그별 중심 좌표 분포 출력
@@ -47,7 +50,7 @@ def plotCenterPos(path):
     htmls = [f for f in os.listdir(path) if f.endswith('.html')]
     # 태그별 중심 좌표 수집
     centerPosData = dict()
-    for i, name in enumerate(htmls):
+    for i, name in tqdm(enumerate(htmls)):
         html = os.path.join(path, name)
         driver.get(abspath(html))
         time.sleep(0.1)
@@ -69,6 +72,7 @@ def plotCenterPos(path):
         plt.scatter(pos[:, 0], pos[:, 1], label=tag)
     plt.legend()
     plt.show()
+    plt.savefig('centerPos.png', dpi=300)
 
     return centerPosData
 
@@ -77,10 +81,10 @@ def plotTagSize(dataPath):
     htmls = [f for f in os.listdir(dataPath) if f.endswith('.html')]
     # 태그별 크기 정보 수집
     sizeData = dict()
-    for i, name in enumerate(htmls):
+    for i, name in tqdm(enumerate(htmls)):
         html = os.path.join(dataPath, name)
         driver.get(abspath(html))
-        time.sleep(0.1)
+        time.sleep(0.01)
         
         # retrive center position
         elements = driver.find_elements(By.XPATH, '//*')
@@ -114,17 +118,18 @@ def plotTagSize(dataPath):
         plt.scatter(x, y, s=z, label=tag)
     # plt.legend()
     plt.show()
+    plt.savefig('size.png', dpi=300)
 
     return sizeData
 
 
 def colorTagPlot(dataPath):
-    colors = {'rgba(51, 51, 51, 1)':'black', 'rgba(59, 130, 246, 1)':'blue', 'rgba(245, 245, 245, 1)':'white', 'rgba(249, 115, 22, 1)':'orange', 'rgba(239, 68, 68, 1)':'red', 'rgba(34, 197, 94, 1)':'green'}
+    colors = {'rgba(51, 51, 51, 1)':'black', 'rgba(59, 130, 246, 1)':'blue', 'rgba(245, 245, 245, 1)':'white', 'rgba(249, 115, 22, 1)':'orange', 'rgba(239, 68, 68, 1)':'red', 'rgba(34, 197, 94, 1)':'green', 'rgba(253, 224, 71, 1)':'yellow', 'rgba(168, 85, 247, 1)':'purple'}
     driver = webdriver.Chrome()
     htmls = [f for f in os.listdir(dataPath) if f.endswith('.html')]
     # 태그별 배경 색 정보 수집
     colorData = dict()
-    for i, name in enumerate(htmls):
+    for i, name in tqdm(enumerate(htmls)):
         html = os.path.join(dataPath, name)
         driver.get(abspath(html))
         time.sleep(0.1)
@@ -140,8 +145,6 @@ def colorTagPlot(dataPath):
                 colorData[element.tag_name+color] = 1
             else:
                 colorData[element.tag_name+color] += 1
-        if i==10:
-            break
     driver.close()
 
     # 바 차트
@@ -151,6 +154,7 @@ def colorTagPlot(dataPath):
     # x축 : 태그+색, y축 : 개수
     plt.bar(colorData.keys(), colorData.values())
     plt.show()
+    plt.savefig('color.png', dpi=300)
 
     return colorData
 
@@ -232,8 +236,10 @@ def batchFileSimilarity(path):
     for i, name in enumerate(guis):
         # 파일별 유사도 계산
         path1 = os.path.join(path+'dsl/', name)
-        path2 = os.path.join(path+'predicted/', name)
+        path2 = os.path.join(path+'dsl_predict/', name)
         fileAccuracy.append(fileSimilarity(path1, path2))
+        if fileAccuracy[-1]==1:
+            print(name)
 
         # 태그별 정답률
         tagAccuracyPerFile = getAccuracyPerTag(path1, path2)
@@ -245,19 +251,32 @@ def batchFileSimilarity(path):
     return fileAccuracy, tagAccuracy
 
 def showAccuracy(fileAccuracy, tagAccuracy):
-    # 파일별 정확도
+    # 파일별 평균 정확도
     print('file accuracy :', sum(fileAccuracy)/len(fileAccuracy))
     # 태그별 정확도
     for tag in tagAccuracy:
         print(tag, 'accuracy :', tagAccuracy[tag][0]/tagAccuracy[tag][1])
     plt.bar(tagAccuracy.keys(), [tagAccuracy[tag][0]/tagAccuracy[tag][1] for tag in tagAccuracy])
     plt.show()
+    plt.savefig('tagAccuracy.png', dpi=300)
 
 
 if __name__ == '__main__':
-    path = 'dataGenerator/data_/'
-    plotCenterPos(path+'dsl/')
-    plotTagSize(path+'dsl/')
-    showAccuracy(*batchFileSimilarity(path))
-    
+    path = 'pix2code/datasets/pix2code_datasets/web/all_data/'
+    # plotCenterPos(path+'html/')
+    plotTagSize(path+'')
+    # colorTagPlot(path+'html/')
+    # plotTagData(path+'dsl/')
+    # showAccuracy(*batchFileSimilarity(path))
+    # mh = MakeHtml()
+
+    # cnt = 0
+    # for name in os.listdir(path+'dsl_predict/'):
+    #     if name.endswith('.gui'):
+    #         try:
+    #             name = name.replace('.gui', '')
+    #             mh.saveHtml(path, name)
+    #         except:
+    #             cnt += 1
+    # print(cnt)
 
