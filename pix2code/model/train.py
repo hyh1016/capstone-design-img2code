@@ -17,7 +17,8 @@ import sys
 
 from classes.dataset.Generator import *
 from classes.model.pix2code import *
-from classes.model.pix2code_v1_Bi_GRU import *
+from classes.model.pix2code_v1_Bi_GRU_resnet_dropout import *
+from classes.model.pix2code_v2_BiGRU_dense import *
 
 import os
 dir_name = "Learning_log"
@@ -27,10 +28,12 @@ def make_tensorboard_dir(dir_name):
     sub_dir_name = datetime.now().strftime("%Y%m%d-%H%M%S")
     return os.path.join(root_logdir,sub_dir_name)
 
+#callback 
 TB_log_dir = make_tensorboard_dir(dir_name)
 TensorB = keras.callbacks.TensorBoard(log_dir = TB_log_dir)
 
-# early_stop = keras.callbacks.EarlyStopping(monitor = "var_loss",min_delta=0, patience=10, restore_best_weights=True)
+early_stop = keras.callbacks.EarlyStopping(monitor = "val_loss",min_delta=0, patience=5, restore_best_weights=True, verbose=1)
+checkpointer = keras.callbacks.ModelCheckpoint(filepath='./checkpoint/{epoch:02d}-{val_loss:.4f}.h5', monitor = "val_loss", verbose=1, save_best_only=True)
 
 def run(input_path, output_path, test_path, is_memory_intensive=False, pretrained_model=None):
     np.random.seed(1234)
@@ -66,16 +69,17 @@ def run(input_path, output_path, test_path, is_memory_intensive=False, pretraine
         generator = Generator.data_generator(voc, gui_paths, img_paths, batch_size=BATCH_SIZE, generate_binary_sequences=True)
         vaild_generator = Generator.data_generator(voc, vaild_gui_paths, vailid_img_paths, batch_size=BATCH_SIZE, generate_binary_sequences=True)
 
-    model = pix2code(input_shape, output_size, output_path)
-    #model = pix2code_v1_Bi_GRU(input_shape, output_size, output_path)
+    #model = pix2code(input_shape, output_size, output_path)
+    #model = pix2code_v1_Bi_GRU_resnet_dropout(input_shape, output_size, output_path)
+    model = pix2code_v2_BiGRU_dense(input_shape, output_size, output_path)
     # plot_model(model.model, to_file="model.png")
     if pretrained_model is not None:
         model.model.load_weights(pretrained_model)
 
     if not is_memory_intensive:
-        model.fit(dataset.input_images, dataset.partial_sequences, dataset.next_words, callbacks=[TensorB])
+        model.fit(dataset.input_images, dataset.partial_sequences, dataset.next_words, callbacks=[TensorB,early_stop,checkpointer])
     else:
-        model.fit_generator(generator, vaild_generator, steps_per_epoch=steps_per_epoch, validation_steps=valid_steps_per_epoch, callbacks=[TensorB])
+        model.fit_generator(generator, vaild_generator, steps_per_epoch=steps_per_epoch, validation_steps=valid_steps_per_epoch, callbacks=[TensorB,early_stop,checkpointer])
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
