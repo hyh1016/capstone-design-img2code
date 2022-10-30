@@ -84,4 +84,4 @@ class pix2code_v2_GRU_dense(AModel):
         return self.model.predict([image, partial_caption], verbose=0)[0]
 
     def predict_batch(self, images, partial_captions):
-        return self.model.predict([images, partial_captions], verbose=1)
+        return self.model.predict([images, partial_captions], verbose=0)

@@ -262,12 +262,12 @@ def showAccuracy(fileAccuracy, tagAccuracy):
 
 
 if __name__ == '__main__':
-    path = 'pix2code/datasets/pix2code_datasets/web/all_data/'
+    path = 'dataGenerator/data/7/'
     # plotCenterPos(path+'html/')
-    plotTagSize(path+'')
+    # plotTagSize(path+'')
     # colorTagPlot(path+'html/')
     # plotTagData(path+'dsl/')
-    # showAccuracy(*batchFileSimilarity(path))
+    showAccuracy(*batchFileSimilarity(path))
     # mh = MakeHtml()
 
     # cnt = 0

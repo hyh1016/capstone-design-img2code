@@ -5,8 +5,9 @@ from pix2code.model.classes.Sampler import *
 from pix2code.model.classes.model.pix2code import *
 from pix2code.model.classes.model.pix2code_v1 import *
 from pix2code.model.classes.model.pix2code_v1_Bi_GRU import *
+from pix2code.model.classes.model.pix2code_v2_GRU_dense import *
 
-PROCESS_COUNT = 16
+PROCESS_COUNT = 32
 
 def predict_greedy_multi(input_img, inQueue:Queue, outQueue:Queue, id, voc:Vocabulary, input_shape, output_size, context_length, require_sparse_label=True, sequence_length=150, verbose=False):
     current_context = [voc.vocabulary[PLACEHOLDER]] * (context_length - 1)
@@ -72,8 +73,12 @@ def predictDsl(input_path, output_path, trained_weights_path, inQueue:Queue, out
     voc.retrieve(trained_weights_path)
     
     file_list = os.listdir(input_path)
+    file_list1 = set(os.listdir(output_path))
     file_list = file_list[qnum::PROCESS_COUNT]
     for input_file in file_list:
+        if basename(input_file)[:basename(input_file).find(".")]+'.gui' in file_list1:
+            print("skip {}".format(input_file))
+            continue
         file_name = basename(input_file)[:basename(input_file).find(".")]
         evaluation_img = Utils.get_preprocessed_img(input_path + input_file, IMAGE_SIZE)
         result, _ = predict_greedy_multi(np.array([evaluation_img]), inQueue, outQueue, qnum, voc, input_shape, output_size, CONTEXT_LENGTH)
@@ -90,25 +95,26 @@ def worker(trained_weights_path:str, inQueue:mp.Queue, outQueue:mp.Queue):
     input_shape = meta_dataset[0]
     output_size = meta_dataset[1]
 
-    model = pix2code_v1_Bi_GRU(input_shape, output_size, trained_weights_path)
-    model.load('pix2code_v1_Bi_GRU')
+    model = pix2code_v2_GRU_dense(input_shape, output_size, trained_weights_path)
+    model.load('pix2code_v2_GRU_dense')
     
     input_imgs = np.empty((0, 256, 256, 3))
     current_contexts = np.empty((0, 48, 23))
     ids = []
     cnt = 0
     while True:
-        data = inQueue.get()
-        if data is None:
-            # 종료 조건
+        if inQueue.empty():
             if cnt==0:
-                break
+                continue
             doPredict(model, input_imgs, current_contexts, ids, outQueue)
             input_imgs = np.empty((0, 256, 256, 3))
             current_contexts = np.empty((0, 48, 23))
             ids = []
             cnt = 0
             continue
+        data = inQueue.get()
+        if data==None:
+            break
         input_imgs = np.append(input_imgs, data[0], axis=0)
         current_contexts = np.append(current_contexts, data[1], axis=0)
         ids.append(data[2])
@@ -143,10 +149,11 @@ def main_process(inQueue:mp.Queue, outQueue:list, trained_weights_path:str, data
 
     for p in procs:
         p.join()
+    inQueue.put(None)
     workerProc.join()
 
 if __name__ == '__main__':
-    trained_weights_path='pix2code/bin/tag_extension/5_all_tag_pix2codev1'
+    trained_weights_path='pix2code/bin/tag_extension/v2_GRU_dense'
     data_path = 'dataGenerator/data/7'
     inQueue = mp.Queue()
     outQueue = [mp.Queue() for _ in range(PROCESS_COUNT)]
