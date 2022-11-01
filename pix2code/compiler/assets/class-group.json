@@ -13,5 +13,7 @@
     "single": "col-lg-12 grow",
     "double": "col-lg-6 grow",
     "triple": "col-lg-4 grow",
-    "quadruple": "col-lg-3 grow"
+    "quadruple": "col-lg-3 grow",
+    "h2": "text-2xl font-bold",
+    "h4": "text-base font-bold"
 }

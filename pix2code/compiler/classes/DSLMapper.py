@@ -129,10 +129,12 @@ class DSLMapper:
                 '</div>\n')
 
     def get_big_title(self):
-        return '<h2 class="font-bold">[]</h2>'
+        h2 = self.styles["h2"]
+        return (f'<h2 class="{h2}">[]</h2>')
 
     def get_small_title(self):
-        return '<h4 class="font-bold">[]</h4>'
+        h4 = self.styles["h4"]
+        return (f'<h4 class="{h4}">[]</h4>')
     
     def get_text(self):
         return '<p>[]</p>\n'
