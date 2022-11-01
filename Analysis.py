@@ -228,18 +228,18 @@ def getAccuracyPerTag(path1, path2):
 
 
 # 폴더 한번에 유사도 계산
-def batchFileSimilarity(path):
-    guis = [f for f in os.listdir(path+'dsl/') if f.endswith('.gui')]
+def batchFileSimilarity(dsl_path, predict_path):
+    guis = [f for f in os.listdir(dsl_path) if f.endswith('.gui')]
 
     fileAccuracy = []
     tagAccuracy = dict()
     for i, name in enumerate(guis):
         # 파일별 유사도 계산
-        path1 = os.path.join(path+'dsl/', name)
-        path2 = os.path.join(path+'dsl_predict/', name)
+        path1 = os.path.join(dsl_path, name)
+        path2 = os.path.join(predict_path, name)
         fileAccuracy.append(fileSimilarity(path1, path2))
-        if fileAccuracy[-1]==1:
-            print(name)
+        # if fileAccuracy[-1]==1:
+        #     print(name)
 
         # 태그별 정답률
         tagAccuracyPerFile = getAccuracyPerTag(path1, path2)
@@ -262,12 +262,27 @@ def showAccuracy(fileAccuracy, tagAccuracy):
 
 
 if __name__ == '__main__':
-    path = 'dataGenerator/data/7/'
+    dsl_path = 'dataGenerator/data/dsl'
+    predict_path = 'dataGenerator/data/0_all_tag/dsl_predict'
+    showAccuracy(*batchFileSimilarity(dsl_path, predict_path))
+
+    predict_path = 'dataGenerator/data/5_all_tag_pix2codev1/dsl_predict'
+    showAccuracy(*batchFileSimilarity(dsl_path, predict_path))
+
+    predict_path = 'dataGenerator/data/6_pix2code_all_tag_early/dsl_predict'
+    showAccuracy(*batchFileSimilarity(dsl_path, predict_path))
+
+    predict_path = 'dataGenerator/data/7_v2_GRU_dense/dsl_predict'
+    showAccuracy(*batchFileSimilarity(dsl_path, predict_path))
+
+    predict_path = 'dataGenerator/data/8_GRU_dense_15000data/dsl_predict'
+    showAccuracy(*batchFileSimilarity(dsl_path, predict_path))
+
     # plotCenterPos(path+'html/')
     # plotTagSize(path+'')
     # colorTagPlot(path+'html/')
     # plotTagData(path+'dsl/')
-    showAccuracy(*batchFileSimilarity(path))
+    # showAccuracy(*batchFileSimilarity(path))
     # mh = MakeHtml()
 
     # cnt = 0

@@ -59,7 +59,7 @@ from tqdm import tqdm
 
 # queue 입력 데이터
 # [input_img, current_context, qid]
-def doPredict(model:pix2code_v1_Bi_GRU, input_imgs, current_contexts, ids, outQueue:list):
+def doPredict(model, input_imgs, current_contexts, ids, outQueue:list):
     result = model.predict_batch(input_imgs, current_contexts)
     for i, id in enumerate(ids):
         outQueue[id].put(result[i])
@@ -69,12 +69,12 @@ def predictDsl(input_path, output_path, trained_weights_path, inQueue:Queue, out
     voc.retrieve(trained_weights_path)
     
     file_list = os.listdir(input_path)
-    file_list1 = set(os.listdir(output_path))
+    # file_list1 = set(os.listdir(output_path))
     file_list = file_list[qnum::PROCESS_COUNT]
     for input_file in file_list:
-        if basename(input_file)[:basename(input_file).find(".")]+'.gui' in file_list1:
-            print("skip {}".format(input_file))
-            continue
+        # if basename(input_file)[:basename(input_file).find(".")]+'.gui' in file_list1:
+        #     print("skip {}".format(input_file))
+        #     continue
         file_name = basename(input_file)[:basename(input_file).find(".")]
         evaluation_img = Utils.get_preprocessed_img(input_path + input_file, IMAGE_SIZE)
         result, _ = predict_greedy_multi(np.array([evaluation_img]), inQueue, outQueue, qnum, voc, input_shape, output_size, CONTEXT_LENGTH)
@@ -112,7 +112,7 @@ def worker(trained_weights_path:str, weights_name:str, inQueue:mp.Queue, outQueu
         current_contexts = np.append(current_contexts, data[1], axis=0)
         ids.append(data[2])
         cnt += 1
-        # PROCESS_COUNT개 찼을 때 처리
+        # PROCESS_COUNT/2개 찼을 때 처리
         if cnt == PROCESS_COUNT//2:
             doPredict(model, input_imgs, current_contexts, ids, outQueue)
             input_imgs = np.empty((0, 256, 256, 3))
@@ -124,7 +124,7 @@ def main_process(inQueue:mp.Queue, outQueue:list, trained_weights_path:str, weig
     meta_dataset = np.load("{}/meta_dataset.npy".format(trained_weights_path), allow_pickle=True)
     input_shape = meta_dataset[0]
     output_size = meta_dataset[1]
-    input_path = f'{data_path}/png/'
+    input_path = f'{data_path}/../png/'
     output_path = f'{data_path}/dsl_predict/'
 
     procs = []
@@ -143,10 +143,40 @@ def main_process(inQueue:mp.Queue, outQueue:list, trained_weights_path:str, weig
     inQueue.put(None)
     workerProc.join()
 
-if __name__ == '__main__':
-    trained_weights_path='pix2code/bin/tag_extension/8_GRU_dense_15000data'
-    data_path = 'dataGenerator/data/8'
-    weights_name = 'pix2code_v2_GRU_dense'
+def main(trained_weights_path:str, weights_name:str, data_path:str):
+    # 출력 폴더 생성
+    output_path = f'{data_path}/dsl_predict/'
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
     inQueue = mp.Queue()
     outQueue = [mp.Queue() for _ in range(PROCESS_COUNT)]
+
     main_process(inQueue, outQueue, trained_weights_path, weights_name, data_path)
+
+if __name__ == '__main__':
+    # trained_weights_path='pix2code/bin/tag_extension/0_all_tag'
+    # data_path = 'dataGenerator/data/0_all_tag'
+    # weights_name = 'pix2code'
+    # main(trained_weights_path, weights_name, data_path)
+
+    # trained_weights_path='pix2code/bin/tag_extension/5_all_tag_pix2codev1'
+    # data_path = 'dataGenerator/data/5_all_tag_pix2codev1'
+    # weights_name = 'pix2code_v1_Bi_GRU'
+    # main(trained_weights_path, weights_name, data_path)
+
+    # trained_weights_path='pix2code/bin/tag_extension/6_pix2code_all_tag_early'
+    # data_path = 'dataGenerator/data/6_pix2code_all_tag_early'
+    # weights_name = 'pix2code'
+    # main(trained_weights_path, weights_name, data_path)
+
+
+    trained_weights_path='pix2code/bin/tag_extension/7_v2_GRU_dense'
+    data_path = 'dataGenerator/data/7_v2_GRU_dense'
+    weights_name = 'pix2code_v2_GRU_dense'
+    main(trained_weights_path, weights_name, data_path)
+
+
+    trained_weights_path='pix2code/bin/tag_extension/8_GRU_dense_15000data'
+    data_path = 'dataGenerator/data/8_GRU_dense_15000data'
+    weights_name = 'pix2code_v2_GRU_dense'
+    main(trained_weights_path, weights_name, data_path)
