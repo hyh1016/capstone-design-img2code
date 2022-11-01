@@ -8,6 +8,7 @@ import sys
 
 from classes.dataset.Generator import *
 from classes.model.pix2code import *
+from classes.model.pix2codeLSTM import *
 
 import os
 import tensorflow as tf
