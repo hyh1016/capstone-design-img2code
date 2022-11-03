@@ -20,18 +20,18 @@ class pix2code_v1_Bi_GRU(AModel):
         self.name = "pix2code_v1_Bi_GRU"
 
         image_model = Sequential()
-        image_model.add(Conv2D(64, (3, 3), padding='valid', activation='relu', input_shape=input_shape))
+        image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu', input_shape=input_shape))
+        image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu'))
+        image_model.add(MaxPooling2D(pool_size=(2, 2)))
+        image_model.add(Dropout(0.1))
+
+        image_model.add(Conv2D(64, (3, 3), padding='valid', activation='relu'))
         image_model.add(Conv2D(64, (3, 3), padding='valid', activation='relu'))
         image_model.add(MaxPooling2D(pool_size=(2, 2)))
         image_model.add(Dropout(0.1))
 
         image_model.add(Conv2D(128, (3, 3), padding='valid', activation='relu'))
         image_model.add(Conv2D(128, (3, 3), padding='valid', activation='relu'))
-        image_model.add(MaxPooling2D(pool_size=(2, 2)))
-        image_model.add(Dropout(0.1))
-
-        image_model.add(Conv2D(256, (3, 3), padding='valid', activation='relu'))
-        image_model.add(Conv2D(256, (3, 3), padding='valid', activation='relu'))
         image_model.add(MaxPooling2D(pool_size=(2, 2)))
         image_model.add(Dropout(0.1))
 

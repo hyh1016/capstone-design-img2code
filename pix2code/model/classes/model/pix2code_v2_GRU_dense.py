@@ -37,13 +37,14 @@ class pix2code_v2_GRU_dense(AModel):
         language_model = Sequential()
         language_model.add(GRU(1024, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
         language_model.add(GRU(1024, return_sequences=True))
+        language_model.add(GRU(1024, return_sequences=True))
 
         #image Encoder: 이미지의 feature와 언어모델의 결과를 받아 보다 정교한 이미지 feature 추출(이미지에 현재 진행 상태 정보를 알려줌)
         image_post_model = Sequential()
         image_post_model.add(Dense(1024, activation='relu'))
-        image_post_model.add(Dropout(0.1))
+        image_post_model.add(Dropout(0.15))
         image_post_model.add(Dense(1024, activation='relu'))
-        image_post_model.add(Dropout(0.1))
+        image_post_model.add(Dropout(0.15))
         image_post_model.add(RepeatVector(CONTEXT_LENGTH))
 
         textual_input = Input(shape=(CONTEXT_LENGTH, output_size))

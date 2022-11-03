@@ -52,7 +52,7 @@ class pix2code_v2_BiGRU_dense(AModel):
 
         #decoder로 들어가는 언어 모델 값 처리
         encoded_text = Dense(1024, activation='relu')(encoded_text)
-        # encoded_text = Dropout()(encoded_text)
+        encoded_text = Dropout(0.2)(encoded_text)
 
         visual_input = Input(shape=input_shape)
         primary_endcoded_image = image_model(visual_input)
