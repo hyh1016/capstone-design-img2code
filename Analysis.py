@@ -224,6 +224,8 @@ def getAccuracyPerTag(path1, path2):
         if lcs[i]:
             tagAccuracy[token][0] += 1
         tagAccuracy[token][1] += 1
+    for tag, accuracy in tagAccuracy.items():
+        tagAccuracy[tag] = accuracy[0]/accuracy[1]
     return tagAccuracy
 
 
@@ -245,53 +247,50 @@ def batchFileSimilarity(dsl_path, predict_path):
         tagAccuracyPerFile = getAccuracyPerTag(path1, path2)
         for tag in tagAccuracyPerFile:
             if tag not in tagAccuracy:
-                tagAccuracy[tag] = [0, 0]
-            tagAccuracy[tag][0] += tagAccuracyPerFile[tag][0]
-            tagAccuracy[tag][1] += tagAccuracyPerFile[tag][1]
+                tagAccuracy[tag] = []
+            tagAccuracy[tag].append(tagAccuracyPerFile[tag])
     return fileAccuracy, tagAccuracy
 
-def showAccuracy(fileAccuracy, tagAccuracy):
+def showAccuracy(fileAccuracy, tagAccuracy, rstPath):
     # 파일별 평균 정확도
     print('file accuracy :', sum(fileAccuracy)/len(fileAccuracy))
     # 태그별 정확도
     for tag in tagAccuracy:
-        print(tag, 'accuracy :', tagAccuracy[tag][0]/tagAccuracy[tag][1])
-    plt.bar(tagAccuracy.keys(), [tagAccuracy[tag][0]/tagAccuracy[tag][1] for tag in tagAccuracy])
-    plt.show()
+        print(tag, 'accuracy :', np.mean(tagAccuracy[tag]))
+    # # 정확도 파일 저장
+    # with open(rstPath, 'w') as f:
+    #     # 평균
+    #     f.write('file accuracy : '+str(sum(fileAccuracy)/len(fileAccuracy))+'\n')
+    #     f.write('file variance : '+str(np.var(fileAccuracy))+'\n')
+    #     for tag in tagAccuracy:
+    #         f.write(tag+' accuracy : '+str(sum(tagAccuracy[tag])/len(tagAccuracy[tag]))+'\n')
+    #         f.write(tag+' variance : '+str(np.var(tagAccuracy[tag]))+'\n')
+    #         f.write(tag+' std : '+str(np.std(tagAccuracy[tag]))+'\n')
+    #         # f.write(tag+' accuracy : '+str(tagAccuracy[tag][0]/tagAccuracy[tag][1])+'\n')
+    #         # f.write(tag+' variance : '+str(np.var())+'\n')
+
+    # 정확도 csv파일 저장
+    import csv
+    with open(rstPath, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['tag', 'accuracy', 'variance', 'std', 'count'])
+        writer.writerow(['total', np.mean(fileAccuracy), np.var(fileAccuracy), np.std(fileAccuracy), len(fileAccuracy)])
+        writer.writerow([])
+        for tag in tagAccuracy:
+            writer.writerow([tag, np.mean(tagAccuracy[tag]), np.var(tagAccuracy[tag]), np.std(tagAccuracy[tag]), len(tagAccuracy[tag])])
+
+    plt.bar(tagAccuracy.keys(), [sum(tagAccuracy[tag])/len(tagAccuracy[tag]) for tag in tagAccuracy])
+    # plt.show()
     plt.savefig('tagAccuracy.png', dpi=300)
 
 
 if __name__ == '__main__':
     dsl_path = 'dataGenerator/data/dsl'
-    predict_path = 'dataGenerator/data/0_all_tag/dsl_predict'
-    showAccuracy(*batchFileSimilarity(dsl_path, predict_path))
 
-    predict_path = 'dataGenerator/data/5_all_tag_pix2codev1/dsl_predict'
-    showAccuracy(*batchFileSimilarity(dsl_path, predict_path))
-
-    predict_path = 'dataGenerator/data/6_pix2code_all_tag_early/dsl_predict'
-    showAccuracy(*batchFileSimilarity(dsl_path, predict_path))
-
-    predict_path = 'dataGenerator/data/7_v2_GRU_dense/dsl_predict'
-    showAccuracy(*batchFileSimilarity(dsl_path, predict_path))
-
-    predict_path = 'dataGenerator/data/8_GRU_dense_15000data/dsl_predict'
-    showAccuracy(*batchFileSimilarity(dsl_path, predict_path))
-
-    # plotCenterPos(path+'html/')
-    # plotTagSize(path+'')
-    # colorTagPlot(path+'html/')
-    # plotTagData(path+'dsl/')
-    # showAccuracy(*batchFileSimilarity(path))
-    # mh = MakeHtml()
-
-    # cnt = 0
-    # for name in os.listdir(path+'dsl_predict/'):
-    #     if name.endswith('.gui'):
-    #         try:
-    #             name = name.replace('.gui', '')
-    #             mh.saveHtml(path, name)
-    #         except:
-    #             cnt += 1
-    # print(cnt)
+    feature = ['15000', '5000', 'nodrop']
+    for f in feature:
+        model_name = ['v0', 'v1', 'v2_GRU', 'v2_GRU_dense']
+        for m in model_name:
+            predict_path = f'dataGenerator/data/{f}/{m}/dsl_predict'
+            showAccuracy(*batchFileSimilarity(dsl_path, predict_path), os.path.join(predict_path+'/../../..', f'{m}_{f}.csv'))
 
