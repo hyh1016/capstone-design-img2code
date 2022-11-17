@@ -285,12 +285,12 @@ def showAccuracy(fileAccuracy, tagAccuracy, rstPath):
 
 
 if __name__ == '__main__':
-    dsl_path = 'dataGenerator/data/dsl'
+    dsl_path = 'dataGenerator/data/original_dataset/dsl'
 
-    feature = ['15000', '5000', 'nodrop']
+    feature = ['original_dataset']
     for f in feature:
-        model_name = ['v0', 'v1', 'v2_GRU', 'v2_GRU_dense']
+        model_name = ['pix2code', 'pix2code_v0_3lstm', 'pix2code_v1_Bi_GRU', 'pix2code_v2_GRU', 'pix2code_v2_GRU_dense']
         for m in model_name:
-            predict_path = f'dataGenerator/data/{f}/{m}/dsl_predict'
-            showAccuracy(*batchFileSimilarity(dsl_path, predict_path), os.path.join(predict_path+'/../../..', f'{m}_{f}.csv'))
+            predict_path = f'dataGenerator/data/{f}/dsl_predict/{m}'
+            showAccuracy(*batchFileSimilarity(dsl_path, predict_path), os.path.join(dsl_path+'/..', f'{m}_{f}.csv'))
 
