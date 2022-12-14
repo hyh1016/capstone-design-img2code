@@ -25,7 +25,8 @@ const uploadEvent = (e) => {
     const formData = new FormData();
     formData.append('image', file);
 
-    fetch('http://34.69.172.233/predict', {
+    const predict_url = '{{url_for('predict')}}';
+    fetch(predict_url, {
         method: 'POST',
         body: formData
     })

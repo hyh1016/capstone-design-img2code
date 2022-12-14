@@ -3,7 +3,7 @@ import sys
 from os.path import basename
 from pix2code.model.classes.Sampler import *
 from pix2code.model.classes.model.pix2code import *
-from pix2code.model.classes.model.pix2code_v0_3lstm import *
+# from pix2code.model.classes.model.pix2code_v0_3lstm import *
 from pix2code.model.classes.model.pix2code_v1 import *
 from pix2code.model.classes.model.pix2code_v1_Bi_GRU import *
 from pix2code.model.classes.model.pix2code_v2_GRU_dense import *
@@ -140,8 +140,8 @@ def predictDsl(input_path, output_path, trained_weights_path, inQueue:Queue, out
         #     continue
         file_name = basename(input_file)[:basename(input_file).find(".")]
         evaluation_img = Utils.get_preprocessed_img(input_path + input_file, IMAGE_SIZE)
-        result, _ = predict_greedy_multi(np.array([evaluation_img]), inQueue, outQueue, qnum, voc, input_shape, output_size, CONTEXT_LENGTH)
-        # result, _ = predict_beam_search_multi(inQueue, outQueue, qnum, voc, input_shape, output_size, CONTEXT_LENGTH, np.array([evaluation_img]), beam_width=5)
+        # result, _ = predict_greedy_multi(np.array([evaluation_img]), inQueue, outQueue, qnum, voc, input_shape, output_size, CONTEXT_LENGTH)
+        result, _ = predict_beam_search_multi(inQueue, outQueue, qnum, voc, input_shape, output_size, CONTEXT_LENGTH, np.array([evaluation_img]), beam_width=5)
         result = result.replace('<START>', '').replace('<END>', '').replace('{', ' {').replace(',', ', ')
         with open(f'{output_path}/{file_name}.gui', 'w') as f:
             f.write(result)
@@ -239,22 +239,22 @@ def main(trained_weights_path:str, weights_name:str, data_path:str, model_name:s
 if __name__ == '__main__':
     data_path = 'dataGenerator/data/original_dataset/png/'
 
-    trained_weights_path='pix2code/bin/original_dataset/v0'
+    trained_weights_path='pix2code/bin/original_dataset/v0_10'
     weights_name = 'pix2code'
     main(trained_weights_path, weights_name, data_path, 'pix2code')
 
-    trained_weights_path='pix2code/bin/original_dataset/v0_3LSTM'
-    weights_name = 'pix2code'
-    main(trained_weights_path, weights_name, data_path, 'pix2code_v0_3lstm')
+    # trained_weights_path='pix2code/bin/original_dataset/v0_3LSTM'
+    # weights_name = 'pix2code'
+    # main(trained_weights_path, weights_name, data_path, 'pix2code_v0_3lstm')
 
-    trained_weights_path='pix2code/bin/original_dataset/v1_Bi_GRU'
-    weights_name = 'pix2code_v1_Bi_GRU'
-    main(trained_weights_path, weights_name, data_path, 'pix2code_v1_Bi_GRU')
+    # trained_weights_path='pix2code/bin/original_dataset/v1_Bi_GRU'
+    # weights_name = 'pix2code_v1_Bi_GRU'
+    # main(trained_weights_path, weights_name, data_path, 'pix2code_v1_Bi_GRU')
 
-    trained_weights_path='pix2code/bin/original_dataset/v2'
-    weights_name = 'pix2code_v2_GRU'
-    main(trained_weights_path, weights_name, data_path, 'pix2code_v2_GRU')
+    # trained_weights_path='pix2code/bin/original_dataset/v2'
+    # weights_name = 'pix2code_v2_GRU'
+    # main(trained_weights_path, weights_name, data_path, 'pix2code_v2_GRU')
 
-    trained_weights_path='pix2code/bin/original_dataset/v2_dense'
-    weights_name = 'pix2code_v2_GRU_dense'
-    main(trained_weights_path, weights_name, data_path, 'pix2code_v2_GRU_dense')
+    # trained_weights_path='pix2code/bin/original_dataset/v2_dense'
+    # weights_name = 'pix2code_v2_GRU_dense'
+    # main(trained_weights_path, weights_name, data_path, 'pix2code_v2_GRU_dense')
