@@ -39,7 +39,7 @@ dsl 자동 생성기 제작 및 html생성, 자동 캡쳐 프로그램 제작을
 
 # Setup
 
-## 1. conda & cuda install
+### 1. conda & cuda install
 
 최신 버전의 conda와 cuda 11.2버전 설치
 
@@ -49,7 +49,13 @@ dsl 자동 생성기 제작 및 html생성, 자동 캡쳐 프로그램 제작을
 $ pip install -r requirements.txt
 ~~~
 
-### 3. flask 서버 실행
+### 3. 가중치 다운로드
+
+아래 링크 파일 다운 후 pix2code/bin 이동 후 압축해제
+
+<a href="https://dongguk0-my.sharepoint.com/:u:/g/personal/sidereus_dongguk_edu/EfgIeC6iW0ZBqprKwGV1G8sBEowN3Tk3aCrAuly9F7c4Gg?e=dHfolu" target="_blank">가중치 다운로드</a>
+
+### 4. flask 서버 실행
 
 다운 받은 모델 경로와 모델 이름 설정
 
@@ -57,7 +63,7 @@ $ pip install -r requirements.txt
 $ python app.py --modelPath=** --modelName=**
 ~~~
 
-### 4. 클라이언트 프로그램 접속
+### 5. 클라이언트 프로그램 접속
 
 실행한 PC의 80번 포트로 접속 후 이미지 업로드
 
