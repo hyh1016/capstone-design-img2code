@@ -1,0 +1,1 @@
+python app.py --modelPath=pix2code/bin/datagen/5000data/v2_GRU/3GRU_0.15drop_32_1024_0.1212_5000data --modelName=pix2code_v2_GRU

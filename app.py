@@ -1,8 +1,9 @@
 import sys
 from os.path import basename
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template, url_for
 from pix2code.model.classes.Sampler import *
 from pix2code.model.classes.model.pix2code import *
+from pix2code.model.classes.model.pix2code_v2_GRU import *
 from pix2code.model.classes.Utils import *
 from pix2code.compiler.classes.Compiler import *
 from pix2code.compiler.classes.DSLMapper import *
@@ -11,14 +12,14 @@ from pix2code.compiler.web_compiler import render_content_with_example_text, ren
 app = Flask(__name__)
 
 # 모델 경로 지정
-trained_weights_path='pix2code/bin'
-trained_model_name='pix2code_v1'
+trained_weights_path='pix2code/bin/datagen/5000data/v2_GRU/3GRU_0.15drop_32_1024_0.1212_5000data'
+trained_model_name='pix2code_v2_GRU'
 
 # 모델 로드
 meta_dataset = np.load("{}/meta_dataset.npy".format(trained_weights_path), allow_pickle=True)
 input_shape = meta_dataset[0]
 output_size = meta_dataset[1]
-model = pix2code(input_shape, output_size, trained_weights_path)
+model = pix2code_v2_GRU(input_shape, output_size, trained_weights_path)
 model.load(trained_model_name)
 
 sampler = Sampler(trained_weights_path, input_shape, output_size, CONTEXT_LENGTH)
@@ -44,3 +45,25 @@ def predict():
     response = jsonify({'html':html})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
+
+@app.route('/', methods=['GET'])
+def index():
+    # render index.html
+    return render_template('index.html')
+
+@app.route('/static/index.js', methods=['GET'])
+def index_js():
+    # render index.js
+    return render_template('index.js')
+
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--modelPath', type=str)
+    parser.add_argument('--modelName', type=str)
+    args = parser.parse_args()
+    trained_weights_path = args.modelPath
+    trained_model_name = args.modelName
+    
+    app.run(host='0.0.0.0', port=80)
