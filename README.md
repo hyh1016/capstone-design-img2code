@@ -19,17 +19,23 @@ dsl 자동 생성기 제작 및 html생성, 자동 캡쳐 프로그램 제작을
 #### 색상
 - 기존에 사용되던 색상에 보라색과 노랑색을 추가
 
-**확장에 따른 결과 스크린 샷
 
 ## 2. 기존 모델 확장 내용
 
 - lstm을 gru로 변경
 - cnn에 context정보 추가
-*모델 수정사항 스크린 샷
+
+![Screenshot 2022-12-21 053330](https://user-images.githubusercontent.com/48210134/208761119-9b608cc9-90b7-466b-be88-81cf246c094a.jpg)
+
+빨간 선 부분 추가
+
 
 ## 3. 클라이언트 프로그램
 
-*클라이언트 스크린 샷
+
+![Screenshot 2022-12-21 053148](https://user-images.githubusercontent.com/48210134/208760864-e7e8d14c-741c-47f2-a155-d420608328b1.jpg)
+
+웹페이지에 접속하여 이미지 업로드 시 분석가능
 
 # Setup
 
@@ -55,16 +61,21 @@ $ python app.py --modelPath=** --modelName=**
 
 실행한 PC의 80번 포트로 접속 후 이미지 업로드
 
-**클라이언트 스크린샷
-**결과 스크린샷
 
 # 프로젝트 결과
 
 - 기존 pix2code모델 보다 정확도가 증가
+
+![Screenshot 2022-12-21 053501](https://user-images.githubusercontent.com/48210134/208761328-51bda2f1-e79a-464e-95f3-52038f807c57.jpg)
+
 - 학습시간 단축
+
+![image](https://user-images.githubusercontent.com/48210134/208761395-aff11a84-cc7c-4d45-bce1-5a0dbd7e12fa.png)
+
 - 표본 복잡도 감소
 
-** 각각 도표 스크린샷
+![image](https://user-images.githubusercontent.com/48210134/208761501-bbe72746-02ec-4ea6-bf30-2faab94f53ea.png)
+
 
 # TEAM `CAPSLOCK`
 
